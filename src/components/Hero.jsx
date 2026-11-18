@@ -1,23 +1,32 @@
 import { useLayoutEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { T, useLang } from '../lang.jsx';
-const PHOTOS = ['/img/tina.webp', '/img/hero.webp', '/img/cajas.webp'];
-const Words = ({ es, en }) => {
-  const { l } = useLang();
-  return (l === 'en' ? en : es).split(' ').map((w, i) => <span className="wm" key={l + i}><span className="hw">{w}</span></span>);
-};
+import { Words, useImg } from '../ui.jsx';
+import { IMG } from '../images.js';
 export default function Hero() {
   const r = useRef();
   const { l } = useLang();
+  // Foto central: portada.jpg propia > Pexels > hero.webp
+  const center = useImg([IMG.portada.local, IMG.portada.remote], '/img/hero.webp');
+  const photos = ['/img/tina.webp', center, '/img/cajas.webp'];
   useLayoutEffect(() => {
     const mm = gsap.matchMedia(r);
     mm.add('(prefers-reduced-motion: no-preference)', () => {
       gsap.timeline({ defaults: { ease: 'power3.out' } })
         .fromTo('.pn', { clipPath: 'inset(100% 0 0 0)' }, { clipPath: 'inset(0% 0 0 0)', duration: 1.2, stagger: 0.15 })
         .from('.pn img', { scale: 1.25, duration: 1.8, stagger: 0.15 }, 0)
-        .from('.hw', { yPercent: 110, duration: 0.9, stagger: 0.06 }, 0.5)
+        .from('.hero .hw', { yPercent: 110, duration: 0.9, stagger: 0.06 }, 0.5)
         .from('.hf', { y: 24, opacity: 0, duration: 0.8, stagger: 0.12 }, 0.9);
-      // parallax moderado: solo las fotos, al salir de la portada
+    });
+    // Escritorio: la portada se fija y el panel central crece hasta ocupar toda la pantalla
+    mm.add('(min-width: 861px) and (prefers-reduced-motion: no-preference)', () => {
+      gsap.timeline({ scrollTrigger: { trigger: r.current, start: 'top top+=72', end: '+=85%', scrub: 0.6, pin: true, anticipatePin: 1 } })
+        .to('.tri', { gridTemplateColumns: '0fr 1fr 0fr', columnGap: 0, '--tint': 0.12, ease: 'none' }, 0)
+        .to('.hero-in', { opacity: 0, y: -90, ease: 'none', duration: 0.55 }, 0)
+        .to('.stamp', { opacity: 0, ease: 'none', duration: 0.3 }, 0);
+    });
+    // Móvil: parallax suave sin fijar la pantalla
+    mm.add('(max-width: 860px) and (prefers-reduced-motion: no-preference)', () => {
       gsap.to('.pn img', { yPercent: 8, ease: 'none', scrollTrigger: { trigger: r.current, start: 'top top', end: 'bottom top', scrub: true } });
     });
     return () => mm.revert();
@@ -25,7 +34,7 @@ export default function Hero() {
   return (
     <section className="hero" id="top" ref={r} aria-labelledby="h1">
       <div className="tri" aria-hidden="true">
-        {PHOTOS.map((s, i) => <div className="pn" key={s}><img src={s} alt="" width="900" height="1100" fetchPriority={i === 1 ? 'high' : undefined} decoding="async" /></div>)}
+        {photos.map((s, i) => <div className="pn" key={i}>{s && <img src={s} alt="" width="900" height="1100" fetchPriority={i === 1 ? 'high' : undefined} decoding="async" />}</div>)}
       </div>
       <div className="wrap hero-in">
         <h1 id="h1"><Words es="Camarón congelado de Ecuador, en volúmenes comerciales." en="Frozen shrimp from Ecuador, in commercial volumes." /></h1>

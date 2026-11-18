@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { T, useLang } from '../lang.jsx';
+import { Words } from '../ui.jsx';
 // Se configuran en Vercel (Settings → Environment Variables) o en un archivo .env local
 const EMAIL = import.meta.env.VITE_CONTACT_EMAIL || '';
 const WA = import.meta.env.VITE_CONTACT_WHATSAPP || '';
@@ -26,7 +27,7 @@ export function Contact() {
     <section id="contacto" className="sec-cta">
       <div className="wrap ct">
         <div className="rv">
-          <h2><T es="Hablemos de negocios" en="Let’s talk business" /></h2>
+          <h2><Words es="Hablemos de negocios" en="Let’s talk business" /></h2>
           <p className="intro"><T es="Si eres importador o distribuidor, cuéntanos qué producto y volumen necesitas y te respondemos con una cotización." en="If you are an importer or distributor, tell us which product and volume you need and we will reply with a quote." /></p>
           <dl className="det">
             <div><dt><T es="Correo:" en="Email:" /></dt><dd>{EMAIL ? <a href={'mailto:' + EMAIL}>{EMAIL}</a> : '[CORREO]'}</dd></div>
