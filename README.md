@@ -1,27 +1,26 @@
-# EXPOMARIFRES S.A. – Sitio web
+# EXPOMARIFRES S.A. – Sitio web (React + Vite + GSAP)
 
-Sitio estático bilingüe (ES/EN) de EXPOMARIFRES S.A. "Mariscos Frescos". No tiene dependencias ni paso de compilación.
+## Respaldo antes de migrar (la versión HTML actual)
+    git checkout -b respaldo-html && git push origin respaldo-html
+    git checkout main
+Luego reemplaza el contenido de `main` por esta carpeta y **mueve tus fotos a `public/img/`** (logo.png, favicon.png, hero.webp, proceso.webp, tina.webp, cajas.webp). Las URLs `/img/...` se conservan.
 
-## Estructura
-```
-index.html      Página completa (HTML + CSS + JS)
-img/            Logo, favicon y fotos (WebP)
-vercel.json     Cabeceras de seguridad y caché para Vercel
-robots.txt      Permite el rastreo
-DESIGN.md       Decisiones de diseño y tokens
-.gitignore      Excluye secretos y archivos locales
-```
+## Desarrollo
+    npm install
+    npm run dev      # local
+    npm run build    # genera dist/
 
-## Configurar el contacto
-En `index.html`, al final, completa:
-```js
-var CONTACT_EMAIL='';      // ej. ventas@tudominio.com
-var CONTACT_WHATSAPP='';   // ej. +593 99 999 9999
-```
-Con el correo configurado, el formulario abre el programa de correo del visitante con el mensaje listo.
+## Contacto (sin tocar código)
+Copia `.env.example` a `.env` o crea en Vercel (Settings → Environment Variables):
+`VITE_CONTACT_EMAIL` y `VITE_CONTACT_WHATSAPP`. Luego vuelve a desplegar.
 
-## Desplegar en Vercel
-Sube estos archivos al repositorio de GitHub (rama principal). Vercel despliega solo. En la configuración del proyecto: Framework Preset "Other", sin comando de compilación y sin directorio de salida.
+## Vercel
+Framework Preset **Vite**, Build `npm run build`, Output `dist`.
 
-## Pendiente cuando se conozca el dominio
-Agregar `og:image` con URL absoluta, `canonical` y `sitemap.xml`.
+## Dependencias
+- react / react-dom: componentes.
+- gsap (+ScrollTrigger): revelados, tríptico de portada y parallax. Respeta `prefers-reduced-motion`.
+- vite: compilación.
+
+## Pendiente
+og:image absoluta, canonical y sitemap.xml cuando haya dominio.
