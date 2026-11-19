@@ -1,15 +1,21 @@
 import { useEffect, useState } from 'react';
 import { T, useLang } from '../lang.jsx';
-const LINKS = [['nosotros', 'Nosotros', 'About'], ['hacemos', 'Qué hacemos', 'What we do'], ['mercados', 'Mercados', 'Markets']];
+const LINKS = [['productos', 'Productos', 'Products'], ['compradores', 'Para compradores', 'For buyers'], ['empresa', 'Empresa', 'Company']];
 export default function Header() {
   const { l, setL } = useLang();
   const [open, setOpen] = useState(false);
   const [sc, setSc] = useState(false);
+  const [act, setAct] = useState('');
   useEffect(() => {
     const s = () => setSc(window.scrollY > 30);
     const k = (e) => e.key === 'Escape' && setOpen(false);
-    s(); window.addEventListener('scroll', s, { passive: true }); window.addEventListener('keydown', k);
-    return () => { window.removeEventListener('scroll', s); window.removeEventListener('keydown', k); };
+    s();
+    window.addEventListener('scroll', s, { passive: true });
+    window.addEventListener('keydown', k);
+    // enlace activo según la sección visible
+    const io = new IntersectionObserver((es) => es.forEach((e) => e.isIntersecting && setAct(e.target.id)), { rootMargin: '-45% 0px -50% 0px' });
+    LINKS.concat([['contacto']]).forEach(([id]) => { const el = document.getElementById(id); el && io.observe(el); });
+    return () => { window.removeEventListener('scroll', s); window.removeEventListener('keydown', k); io.disconnect(); };
   }, []);
   return (
     <header className={'bar' + (sc ? ' scrolled' : '')}>
@@ -17,7 +23,7 @@ export default function Header() {
         <a className="logo" href="#top" aria-label="EXPOMARIFRES – Mariscos Frescos"><img src="/img/logo.png" alt="EXPOMARIFRES – Mariscos Frescos" width="99" height="80" /></a>
         <button className="burger" type="button" aria-expanded={open} aria-controls="nav" aria-label="Menú / Menu" onClick={() => setOpen(!open)}><span /></button>
         <nav id="nav" className={open ? 'open' : ''} aria-label="Principal" onClick={(e) => e.target.closest('a') && setOpen(false)}>
-          {LINKS.map(([id, es, en]) => <a key={id} className="l" href={'#' + id}><T es={es} en={en} /></a>)}
+          {LINKS.map(([id, es, en]) => <a key={id} className={'l' + (act === id ? ' on' : '')} href={'#' + id}><T es={es} en={en} /></a>)}
           <div className="lang" role="group" aria-label="Idioma / Language">
             {['es', 'en'].map((x) => <button key={x} type="button" aria-pressed={l === x} onClick={() => setL(x)}>{x.toUpperCase()}</button>)}
           </div>

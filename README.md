@@ -1,26 +1,42 @@
-# EXPOMARIFRES S.A. – Sitio web (React + Vite + GSAP)
+# EXPOMARIFRES S.A. – Sitio web (v4)
 
-## Respaldo antes de migrar (la versión HTML actual)
-    git checkout -b respaldo-html && git push origin respaldo-html
-    git checkout main
-Luego reemplaza el contenido de `main` por esta carpeta y **mueve tus fotos a `public/img/`** (logo.png, favicon.png, hero.webp, proceso.webp, tina.webp, cajas.webp). Las URLs `/img/...` se conservan.
+Sitio bilingüe (ES/EN) en React 18 + Vite 5 + GSAP 3 (ScrollTrigger). Sin otras dependencias.
 
-## Desarrollo
-    npm install
-    npm run dev      # local
-    npm run build    # genera dist/
+## Estructura
+```
+index.html              SEO, fuentes, precarga de la foto de portada
+src/main.jsx            Punto de entrada
+src/App.jsx             Composición, titulares y transiciones entre secciones
+src/motion.js           Importa GSAP y registra ScrollTrigger UNA vez
+src/data.js             Destinos de la cinta (editar aquí) y años desde 2008
+src/lang.jsx, ui.jsx    Idioma ES/EN y utilidades
+src/components/         Header, Hero, Marquee, Products, Risks, About, Contact
+src/styles.css          Todos los estilos
+public/img/             Logo, favicon y fotos (WebP)
+vercel.json             Cabeceras de seguridad y caché
+```
 
-## Contacto (sin tocar código)
-Copia `.env.example` a `.env` o crea en Vercel (Settings → Environment Variables):
-`VITE_CONTACT_EMAIL` y `VITE_CONTACT_WHATSAPP`. Luego vuelve a desplegar.
+## Comandos
+```
+npm install
+npm run dev        # desarrollo
+npm run build      # producción (carpeta dist)
+npm run preview    # probar el build
+```
+Vercel: Framework Preset "Vite" (o "Other" con `npm run build` y salida `dist`).
 
-## Vercel
-Framework Preset **Vite**, Build `npm run build`, Output `dist`.
+## Contacto
+Variables de entorno (Vercel → Settings → Environment Variables, o archivo `.env`):
+```
+VITE_CONTACT_EMAIL=ventas@tudominio.com
+VITE_CONTACT_WHATSAPP=+593999999999
+```
+Sin correo, el formulario avisa que el envío no está configurado y no se muestran datos de contacto vacíos.
 
-## Dependencias
-- react / react-dom: componentes.
-- gsap (+ScrollTrigger): revelados, tríptico de portada y parallax. Respeta `prefers-reduced-motion`.
-- vite: compilación.
+## Fotos
+- Portada: `portada.webp` (escritorio), `portada-1100.webp` (tablet) y `portada-m.webp` (recorte vertical para móvil). Se cambian por archivos con el mismo nombre.
+- Planta: `proceso.webp`, `tina.webp`, `cajas.webp` (fotos propias de la empresa).
+- Ya no se enlaza ninguna imagen externa.
 
-## Pendiente
-og:image absoluta, canonical y sitemap.xml cuando haya dominio.
+## Pendiente cuando se conozca el dominio
+`og:image` con URL absoluta, `canonical` y `sitemap.xml`.
